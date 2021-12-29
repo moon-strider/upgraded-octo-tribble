@@ -5,30 +5,39 @@
 
 
 template<std::size_t SIZE>
-void set_above_main_diagonal(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+std::array<std::array<unsigned char, SIZE>, SIZE> set_above_main_diagonal \
+(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+    std::array<std::array<unsigned char, SIZE>, SIZE> new_mat = mat;
     for (int i = 0; i < SIZE; ++i) {
         for (int j = i+1; j < SIZE; ++j) {
-            mat[i][j] = num;
+            new_mat[i][j] = num;
         }
     }
+    return new_mat;
 }
 
-//TODO: return a new matrix instead of modifying the old one
+
 template<std::size_t SIZE>
-void set_under_main_diagonal(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+std::array<std::array<unsigned char, SIZE>, SIZE> set_under_main_diagonal \
+(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+    std::array<std::array<unsigned char, SIZE>, SIZE> new_mat = mat;
     for (int i = SIZE-1; i > 0; --i) {
         for (int j = i-1; j >= 0; --j) {
-            mat[i][j] = num;
+            new_mat[i][j] = num;
         }
     }
+    return new_mat;
 }
 
 
 template<std::size_t SIZE>
-void set_main_diagonal(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+std::array<std::array<unsigned char, SIZE>, SIZE> set_main_diagonal \
+(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
+    std::array<std::array<unsigned char, SIZE>, SIZE> new_mat = mat;
     for (int i = 0; i < mat.size(); ++i) {
-        mat[i][i] = num;
+        new_mat[i][i] = num;
     }
+    return new_mat;
 }
 
 
@@ -57,11 +66,11 @@ int main(int argc, char *argv[]) {
     }
     
     show_mat(mat);
-    set_main_diagonal(mat, 0);
+    mat = set_main_diagonal(mat, 0);
     show_mat(mat);
-    set_above_main_diagonal(mat, 1);
+    mat = set_above_main_diagonal(mat, 1);
     show_mat(mat);
-    set_under_main_diagonal(mat, 2);
+    mat = set_under_main_diagonal(mat, 2);
     show_mat(mat);
     
     return 0;
