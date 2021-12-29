@@ -16,8 +16,8 @@ void set_above_main_diagonal(std::array<std::array<unsigned char, SIZE>, SIZE> &
 //TODO: return a new matrix instead of modifying the old one
 template<std::size_t SIZE>
 void set_under_main_diagonal(std::array<std::array<unsigned char, SIZE>, SIZE> &mat, int num) {
-    for (int i = SIZE; i > 0; --i) {
-        for (int j = SIZE; j > i+1; --j) {
+    for (int i = SIZE-1; i > 0; --i) {
+        for (int j = i-1; j >= 0; --j) {
             mat[i][j] = num;
         }
     }
@@ -62,6 +62,7 @@ int main(int argc, char *argv[]) {
     set_above_main_diagonal(mat, 1);
     show_mat(mat);
     set_under_main_diagonal(mat, 2);
+    show_mat(mat);
     
     return 0;
 }
