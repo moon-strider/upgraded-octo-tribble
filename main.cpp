@@ -118,6 +118,13 @@ void assert_test() {
     {{{1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}}};
     const matrix<int, 3, 5> hor_rect = \
     {{{1,2,3,4,5}, {1,2,3,4,5}, {1,2,3,4,5}}};
+    const matrix<int, 3, 5> mult1 = \
+    {{{2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}}};
+    const matrix<int, 5, 3> mult2 = \
+    {{{4, 4, 4}, {4, 4, 4}, {4, 4, 4}, {4, 4, 4}, {4, 4, 4}}};
+    
+    matrix<int, 3, 3> filler_mat = \
+    {{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}}};
     
     const matrix<int, 3, 3> res_above_square3x3 = \
     {{{1,0,0}, {4,5,0}, {7,8,9}}};
@@ -146,6 +153,12 @@ void assert_test() {
     const matrix<int, 3, 5> res_under_hor_rect = \
     {{{1,2,3,4,5}, {0,2,3,4,5}, {0,0,3,4,5}}};
     
+    const matrix<int, 3, 3> res_mult = \
+    {{{40, 40, 40}, {40, 40, 40,}, {40, 40, 40}}};
+    
+    const matrix<int, 3, 3> res_fill = \
+    {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
+    
     assert(set_above_main_diagonal(square3x3, 0) == res_above_square3x3);
     assert(set_above_main_diagonal(square4x4, 0) == res_above_square4x4);
     assert(set_above_main_diagonal(hor_rect, 0) == res_above_hor_rect);
@@ -161,7 +174,10 @@ void assert_test() {
     assert(set_under_main_diagonal(hor_rect, 0) == res_under_hor_rect);
     assert(set_under_main_diagonal(ver_rect, 0) == res_under_ver_rect);
     
-    //TODO add assert for fill_mat_ and multiply_matrices
+    assert(multiply_matrices(mult1, mult2) == res_mult);
+    
+    fill_mat_(filler_mat, 1);
+    assert(filler_mat == res_fill);
 }
 
 
