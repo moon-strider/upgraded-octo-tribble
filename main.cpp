@@ -17,7 +17,7 @@ int randint(int from, int to) {
 }
 
 
-template<std::size_t columns, std::size_t rows>
+template<std::size_t rows, std::size_t columns>
 matrix<int, rows, columns> set_above_main_diagonal \
 (const matrix<int, rows, columns> &mat, int num) {
     matrix<int, rows, columns> new_mat = mat;
@@ -30,7 +30,7 @@ matrix<int, rows, columns> set_above_main_diagonal \
 }
 
 
-template<std::size_t columns, std::size_t rows>
+template<std::size_t rows, std::size_t columns>
 matrix<int, rows, columns> set_under_main_diagonal \
 (const matrix<int, rows, columns> &mat, const int num) {
     matrix<int, rows, columns> new_mat = mat;
@@ -43,7 +43,7 @@ matrix<int, rows, columns> set_under_main_diagonal \
 }
 
 
-template<std::size_t columns, std::size_t rows>
+template<std::size_t rows, std::size_t columns>
 matrix<int, rows, columns> set_main_diagonal \
 (const matrix<int, rows, columns> &mat, const int num) {
     matrix<int, rows, columns> new_mat = mat;
@@ -69,12 +69,37 @@ void show_mat(const matrix<int, rows, columns> mat) {
 
 
 template<std::size_t rows, std::size_t columns>
-void fill_mat_(matrix<int, rows, columns> &mat) {
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < rows; ++j) {
-            mat[i][j] = randint(0, 9);
+void fill_mat_(matrix<int, rows, columns> &mat, int n = -1337) {
+    if (n == -1337) {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
+                mat[i][j] = randint(0, 9);
+            }
+        }
+    } else {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < columns; ++j) {
+                mat[i][j] = n;
+            }
         }
     }
+}
+
+
+template<std::size_t rows1, std::size_t columns1, \
+std::size_t rows2, std::size_t columns2>
+matrix<int, rows1, columns2> multiply_matrices \
+(matrix<int, rows1, columns1> mat1, matrix<int, rows2, columns2> mat2) {
+    matrix<int, rows1, columns2> result_matrix;
+    fill_mat_(result_matrix, 0);
+    for(int i = 0; i < rows1; ++i) {
+        for(int j = 0; j < columns2; ++j) {
+            for(int k = 0; k < columns1; ++k) {
+                result_matrix[i][j] += mat1[i][k] * mat2[k][j];
+            }
+        }
+    }
+    return result_matrix;
 }
 
 
@@ -135,26 +160,20 @@ void assert_test() {
 int main(int argc, char *argv[]) {
     assert_test();
     
-    const int rows = 5, columns = 3;
+    matrix<int, 3, 5> mat1;
+    matrix<int, 5, 3> mat2;
     
-    matrix<int, rows, columns> mat;
+    fill_mat_(mat1, 2);
+    fill_mat_(mat2, 4);
     
-    fill_mat_(mat);
+    std::cout << "mat1:\n";
+    show_mat(mat1);
     
-    std::cout << "initial matrix:\n";
-    show_mat(mat);
+    std::cout << "mat2:\n";
+    show_mat(mat2);
     
-    std::cout << "main diagonal changed:\n";
-    mat = set_main_diagonal(mat, 0);
-    show_mat(mat);
-    
-    std::cout << "above main diagonal changed:\n";
-    mat = set_above_main_diagonal(mat, 1);
-    show_mat(mat);
-    
-    std::cout << "under main diagonal changed:\n";
-    mat = set_under_main_diagonal(mat, 2);
-    show_mat(mat);
+    std::cout << "mat1 * mat2\n";
+    show_mat(multiply_matrices(mat1, mat2));
     
     return 0;
 }
