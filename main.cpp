@@ -18,9 +18,9 @@ int randint(int from, int to) {
 
 
 template<std::size_t columns, std::size_t rows>
-std::array<std::array<int, columns>, rows> set_above_main_diagonal \
-(const std::array<std::array<int, columns>, rows> &mat, int num) {
-    std::array<std::array<int, columns>, rows> new_mat = mat;
+matrix<int, rows, columns> set_above_main_diagonal \
+(const matrix<int, rows, columns> &mat, int num) {
+    matrix<int, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
         for (int j = i+1; j < columns; ++j) {
             new_mat[i][j] = num;
@@ -31,9 +31,9 @@ std::array<std::array<int, columns>, rows> set_above_main_diagonal \
 
 
 template<std::size_t columns, std::size_t rows>
-std::array<std::array<int, columns>, rows> set_under_main_diagonal \
-(const std::array<std::array<int, columns>, rows> &mat, const int num) {
-    std::array<std::array<int, columns>, rows> new_mat = mat;
+matrix<int, rows, columns> set_under_main_diagonal \
+(const matrix<int, rows, columns> &mat, const int num) {
+    matrix<int, rows, columns> new_mat = mat;
     for (int i = rows-1; i > 0; --i) {
         for (int j = i-1; j >= 0; --j) {
             new_mat[i][j] = num;
@@ -44,9 +44,9 @@ std::array<std::array<int, columns>, rows> set_under_main_diagonal \
 
 
 template<std::size_t columns, std::size_t rows>
-std::array<std::array<int, columns>, rows> set_main_diagonal \
-(const std::array<std::array<int, columns>, rows> &mat, const int num) {
-    std::array<std::array<int, columns>, rows> new_mat = mat;
+matrix<int, rows, columns> set_main_diagonal \
+(const matrix<int, rows, columns> &mat, const int num) {
+    matrix<int, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
             new_mat[i][j] = i == j ? num : new_mat[i][j];
@@ -57,7 +57,7 @@ std::array<std::array<int, columns>, rows> set_main_diagonal \
 
 
 template<std::size_t rows, std::size_t columns>
-void show_mat(const std::array<std::array<int, columns>, rows> mat) {
+void show_mat(const matrix<int, rows, columns> mat) {
     for (std::array<int, columns> row : mat) {
         for (int item : row) {
             std::cout << item << "\t";
@@ -69,50 +69,50 @@ void show_mat(const std::array<std::array<int, columns>, rows> mat) {
 
 
 template<std::size_t rows, std::size_t columns>
-void fill_mat_(std::array<std::array<int, columns>, rows> &mat) {
+void fill_mat_(matrix<int, rows, columns> &mat) {
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < rows; ++j) {
-            mat[i][j] = randint(0, 10);
+            mat[i][j] = randint(0, 9);
         }
     }
 }
 
 
 void assert_test() {
-    const std::array<std::array<int, 3>, 3> square3x3 = \
+    const matrix<int, 3, 3> square3x3 = \
     {{{1,2,3}, {4,5,6}, {7,8,9}}};
-    const std::array<std::array<int, 4>, 4> square4x4 = \
+    const matrix<int, 4, 4> square4x4 = \
     {{{1,2,3,4}, {1,2,3,4}, {1,2,3,4}, {1,2,3,4}}};
-    const std::array<std::array<int, 3>, 5> ver_rect = \
+    const matrix<int, 5, 3> ver_rect = \
     {{{1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}}};
-    const std::array<std::array<int, 5>, 3> hor_rect = \
+    const matrix<int, 3, 5> hor_rect = \
     {{{1,2,3,4,5}, {1,2,3,4,5}, {1,2,3,4,5}}};
     
-    const std::array<std::array<int, 3>, 3> res_above_square3x3 = \
+    const matrix<int, 3, 3> res_above_square3x3 = \
     {{{1,0,0}, {4,5,0}, {7,8,9}}};
-    const std::array<std::array<int, 4>, 4> res_above_square4x4 = \
+    const matrix<int, 4, 4> res_above_square4x4 = \
     {{{1,0,0,0}, {1,2,0,0}, {1,2,3,0}, {1,2,3,4}}};
-    const std::array<std::array<int, 3>, 5> res_above_ver_rect = \
+    const matrix<int, 5, 3> res_above_ver_rect = \
     {{{1,0,0}, {1,2,0}, {1,2,3}, {1,2,3}, {1,2,3}}};
-    const std::array<std::array<int, 5>, 3> res_above_hor_rect = \
+    const matrix<int, 3, 5> res_above_hor_rect = \
     {{{1,0,0,0,0}, {1,2,0,0,0}, {1,2,3,0,0}}};
     
-    const std::array<std::array<int, 3>, 3> res_main_square3x3 = \
+    const matrix<int, 3, 3> res_main_square3x3 = \
     {{{0,2,3}, {4,0,6}, {7,8,0}}};
-    const std::array<std::array<int, 4>, 4> res_main_square4x4 = \
+    const matrix<int, 4, 4> res_main_square4x4 = \
     {{{0,2,3,4}, {1,0,3,4}, {1,2,0,4}, {1,2,3,0}}};
-    const std::array<std::array<int, 3>, 5> res_main_ver_rect = \
+    const matrix<int, 5, 3> res_main_ver_rect = \
     {{{0,2,3}, {1,0,3}, {1,2,0}, {1,2,3}, {1,2,3}}};
-    const std::array<std::array<int, 5>, 3> res_main_hor_rect = \
+    const matrix<int, 3, 5> res_main_hor_rect = \
     {{{0,2,3,4,5}, {1,0,3,4,5}, {1,2,0,4,5}}};
     
-    const std::array<std::array<int, 3>, 3> res_under_square3x3 = \
+    const matrix<int, 3, 3> res_under_square3x3 = \
     {{{1,2,3}, {0,5,6}, {0,0,9}}};
-    const std::array<std::array<int, 4>, 4> res_under_square4x4 = \
+    const matrix<int, 4, 4> res_under_square4x4 = \
     {{{1,2,3,4}, {0,2,3,4}, {0,0,3,4}, {0,0,0,4}}};
-    const std::array<std::array<int, 3>, 5> res_under_ver_rect = \
+    const matrix<int, 5, 3> res_under_ver_rect = \
     {{{1,2,3}, {0,2,3}, {0,0,3}, {0,0,0}, {0,0,0}}};
-    const std::array<std::array<int, 5>, 3> res_under_hor_rect = \
+    const matrix<int, 3, 5> res_under_hor_rect = \
     {{{1,2,3,4,5}, {0,2,3,4,5}, {0,0,3,4,5}}};
     
     assert(set_above_main_diagonal(square3x3, 0) == res_above_square3x3);
@@ -137,30 +137,24 @@ int main(int argc, char *argv[]) {
     
     const int rows = 5, columns = 3;
     
-    std::array<std::array<int, columns>, rows> mat;
+    matrix<int, rows, columns> mat;
     
-    matrix<int, 3, 3> mat2;
+    fill_mat_(mat);
     
-    fill_mat_(mat2);
+    std::cout << "initial matrix:\n";
+    show_mat(mat);
     
-    show_mat(mat2);
+    std::cout << "main diagonal changed:\n";
+    mat = set_main_diagonal(mat, 0);
+    show_mat(mat);
     
-    //fill_mat_(mat);
+    std::cout << "above main diagonal changed:\n";
+    mat = set_above_main_diagonal(mat, 1);
+    show_mat(mat);
     
-    //std::cout << "initial matrix:\n";
-    //show_mat(mat);
-    
-    //std::cout << "main diagonal changed:\n";
-    //mat = set_main_diagonal(mat, 0);
-    //show_mat(mat);
-    
-    //std::cout << "above main diagonal changed:\n";
-    //mat = set_above_main_diagonal(mat, 1);
-    //show_mat(mat);
-    
-    //std::cout << "under main diagonal changed:\n";
-    //mat = set_under_main_diagonal(mat, 2);
-    //show_mat(mat);
+    std::cout << "under main diagonal changed:\n";
+    mat = set_under_main_diagonal(mat, 2);
+    show_mat(mat);
     
     return 0;
 }
