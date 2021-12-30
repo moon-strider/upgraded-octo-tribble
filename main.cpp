@@ -8,6 +8,10 @@
 std::mt19937 rng;
 
 
+template<typename T, std::size_t rows, std::size_t columns>
+using matrix = std::array<std::array<T, columns>, rows>;
+
+
 int randint(int from, int to) {
     return std::uniform_int_distribution<int>(from, to)(rng);
 }
@@ -129,29 +133,34 @@ void assert_test() {
 
 
 int main(int argc, char *argv[]) {
-    //DEF array of arrays to arr(n, m)??????
     assert_test();
     
     const int rows = 5, columns = 3;
     
     std::array<std::array<int, columns>, rows> mat;
     
-    fill_mat_(mat);
+    matrix<int, 3, 3> mat2;
     
-    std::cout << "initial matrix:\n";
-    show_mat(mat);
+    fill_mat_(mat2);
     
-    std::cout << "main diagonal changed:\n";
-    mat = set_main_diagonal(mat, 0);
-    show_mat(mat);
+    show_mat(mat2);
     
-    std::cout << "above main diagonal changed:\n";
-    mat = set_above_main_diagonal(mat, 1);
-    show_mat(mat);
+    //fill_mat_(mat);
     
-    std::cout << "under main diagonal changed:\n";
-    mat = set_under_main_diagonal(mat, 2);
-    show_mat(mat);
+    //std::cout << "initial matrix:\n";
+    //show_mat(mat);
+    
+    //std::cout << "main diagonal changed:\n";
+    //mat = set_main_diagonal(mat, 0);
+    //show_mat(mat);
+    
+    //std::cout << "above main diagonal changed:\n";
+    //mat = set_above_main_diagonal(mat, 1);
+    //show_mat(mat);
+    
+    //std::cout << "under main diagonal changed:\n";
+    //mat = set_under_main_diagonal(mat, 2);
+    //show_mat(mat);
     
     return 0;
 }
