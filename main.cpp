@@ -3,6 +3,7 @@
 #include <array>
 #include <random>
 #include <bits/stdc++.h>
+#include <omp.h>
 
 
 std::mt19937 rng;
@@ -91,11 +92,16 @@ std::size_t rows2, std::size_t columns2>
 matrix<int, rows1, columns2> multiply_matrices \
 (matrix<int, rows1, columns1> mat1, matrix<int, rows2, columns2> mat2) {
     matrix<int, rows1, columns2> result_matrix;
-    fill_mat_(result_matrix, 0);
-    for(int i = 0; i < rows1; ++i) {
-        for(int j = 0; j < columns2; ++j) {
-            for(int k = 0; k < columns1; ++k) {
-                result_matrix[i][j] += mat1[i][k] * mat2[k][j];
+# pragma omp parallel shared ( mat1, mat2, result_matrix, \
+rows1, columns1, rows2, columns2 ) private ( i, j, k )
+    {
+        fill_mat_(result_matrix, 0);
+# pragma omp for
+        for(int i = 0; i < rows1; ++i) {
+            for(int j = 0; j < columns2; ++j) {
+                for(int k = 0; k < columns1; ++k) {
+                    result_matrix[i][j] += mat1[i][k] * mat2[k][j];
+                }
             }
         }
     }
@@ -154,6 +160,8 @@ void assert_test() {
     assert(set_under_main_diagonal(square4x4, 0) == res_under_square4x4);
     assert(set_under_main_diagonal(hor_rect, 0) == res_under_hor_rect);
     assert(set_under_main_diagonal(ver_rect, 0) == res_under_ver_rect);
+    
+    //TODO add assert for fill_mat_ and multiply_matrices
 }
 
 
