@@ -91,6 +91,7 @@ template<std::size_t rows1, std::size_t columns1, \
 std::size_t rows2, std::size_t columns2>
 matrix<int, rows1, columns2> multiply_matrices \
 (matrix<int, rows1, columns1> mat1, matrix<int, rows2, columns2> mat2) {
+    assert(rows2 == columns1);
     matrix<int, rows1, columns2> result_matrix;
 # pragma omp parallel shared ( mat1, mat2, result_matrix, \
 rows1, columns1, rows2, columns2 ) private ( i, j, k )
