@@ -4,6 +4,7 @@
 #include <random>
 #include <bits/stdc++.h>
 #include <omp.h>
+#include <stdexcept>
 
 
 std::mt19937 rng;
@@ -138,6 +139,25 @@ matrix<int, rows, columns> multiply_matrix \
 }
 
 
+template<std::size_t rows, std::size_t columns>
+matrix<int, rows, columns> matrix_pow \
+(matrix<int, rows, columns> mat, int num) {
+    if (num < 1) {
+        throw std::invalid_argument("A power cannot be less than 1");
+    }
+    --(--num);
+    matrix<int, rows, columns> result_matrix = \
+        multiply_matrices(mat, mat);
+    
+    for (int i = 0; i < num; ++i) {
+        show_mat(result_matrix);
+        result_matrix = multiply_matrices(result_matrix, mat);
+    }
+    
+    return result_matrix;
+}
+
+
 void assert_test() {
     const matrix<int, 3, 3> square3x3 = \
     {{{1,2,3}, {4,5,6}, {7,8,9}}};
@@ -198,6 +218,9 @@ void assert_test() {
     const matrix<int, 3, 3> res_sum = \
     {{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}}};
     
+    const matrix<int, 3, 3> res_pow = \
+    {{{468, 576, 684}, {1062, 1305, 1548}, {1656, 2034, 2412}}};
+    
     assert(set_above_main_diagonal(square3x3, 0) == res_above_square3x3);
     assert(set_above_main_diagonal(square4x4, 0) == res_above_square4x4);
     assert(set_above_main_diagonal(hor_rect, 0) == res_above_hor_rect);
@@ -219,6 +242,8 @@ void assert_test() {
     
     assert(add_matrices(sum, sum) == res_sum);
     
+    assert(matrix_pow(square3x3, 3) == res_pow);
+    
     fill_mat_(filler_mat, 1);
     assert(filler_mat == res_fill);
 }
@@ -230,6 +255,9 @@ int main(int argc, char *argv[]) {
     //TODO: int -> float / double for matrices and functions
     //TODO: transpose, reversed matrix, power of matrix
     //TODO: auxillary diagonal methods
+    //TODO: assert and check power matrix
+    //TODO: func multiply dims exceptions
+    //TODO: create const matrices such as 1, 0, frob etc.
     
     matrix<int, 3, 5> mat1;
     matrix<int, 5, 3> mat2;
@@ -251,6 +279,12 @@ int main(int argc, char *argv[]) {
     
     std::cout << "mat1 * 5\n";
     show_mat(multiply_matrix(mat1, 5));
+    
+    const matrix<int, 3, 3> square3x3 = \
+    {{{1,2,3}, {4,5,6}, {7,8,9}}};
+    
+    std::cout << "square3x3 ^ 3\n";
+    show_mat(matrix_pow(square3x3, 0));
     
     return 0;
 }
