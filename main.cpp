@@ -19,6 +19,19 @@ int randint(int from, int to) {
 
 
 template<std::size_t rows, std::size_t columns>
+matrix<int, rows, columns> add_matrices \
+(matrix<int, rows, columns> mat1, matrix<int, rows, columns> mat2) {
+    matrix<int, rows, columns> result_matrix;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            result_matrix[i][j] = mat1[i][j] + mat2[i][j];
+        }
+    }
+    return result_matrix;
+}
+
+
+template<std::size_t rows, std::size_t columns>
 matrix<int, rows, columns> set_above_main_diagonal \
 (const matrix<int, rows, columns> &mat, int num) {
     matrix<int, rows, columns> new_mat = mat;
@@ -119,10 +132,14 @@ void assert_test() {
     {{{1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}, {1,2,3}}};
     const matrix<int, 3, 5> hor_rect = \
     {{{1,2,3,4,5}, {1,2,3,4,5}, {1,2,3,4,5}}};
+    
     const matrix<int, 3, 5> mult1 = \
     {{{2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}, {2, 2, 2, 2, 2}}};
     const matrix<int, 5, 3> mult2 = \
     {{{4, 4, 4}, {4, 4, 4}, {4, 4, 4}, {4, 4, 4}, {4, 4, 4}}};
+    
+    const matrix<int, 3, 3> sum = \
+    {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
     
     matrix<int, 3, 3> filler_mat = \
     {{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}}};
@@ -160,6 +177,9 @@ void assert_test() {
     const matrix<int, 3, 3> res_fill = \
     {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
     
+    const matrix<int, 3, 3> res_sum = \
+    {{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}}};
+    
     assert(set_above_main_diagonal(square3x3, 0) == res_above_square3x3);
     assert(set_above_main_diagonal(square4x4, 0) == res_above_square4x4);
     assert(set_above_main_diagonal(hor_rect, 0) == res_above_hor_rect);
@@ -176,6 +196,8 @@ void assert_test() {
     assert(set_under_main_diagonal(ver_rect, 0) == res_under_ver_rect);
     
     assert(multiply_matrices(mult1, mult2) == res_mult);
+    
+    assert(add_matrices(sum, sum) == res_sum);
     
     fill_mat_(filler_mat, 1);
     assert(filler_mat == res_fill);
@@ -196,6 +218,9 @@ int main(int argc, char *argv[]) {
     
     std::cout << "mat2:\n";
     show_mat(mat2);
+    
+    std::cout << "mat1 + mat2\n";
+    show_mat(add_matrices(mat1, mat1));
     
     std::cout << "mat1 * mat2\n";
     show_mat(multiply_matrices(mat1, mat2));
