@@ -123,6 +123,21 @@ rows1, columns1, rows2, columns2 ) private ( i, j, k )
 }
 
 
+template<std::size_t rows, std::size_t columns>
+matrix<int, rows, columns> multiply_matrix \
+(matrix<int, rows, columns> mat, int num) {
+    matrix<int, rows, columns> result_matrix;
+    
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            result_matrix[i][j] = mat[i][j]*num;
+        }
+    }
+    
+    return result_matrix;
+}
+
+
 void assert_test() {
     const matrix<int, 3, 3> square3x3 = \
     {{{1,2,3}, {4,5,6}, {7,8,9}}};
@@ -174,6 +189,9 @@ void assert_test() {
     const matrix<int, 3, 3> res_mult = \
     {{{40, 40, 40}, {40, 40, 40,}, {40, 40, 40}}};
     
+    const matrix<int, 3, 3> res_mult_num = \
+    {{{3, 3, 3}, {3, 3, 3}, {3, 3, 3}}};
+    
     const matrix<int, 3, 3> res_fill = \
     {{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}};
     
@@ -195,6 +213,8 @@ void assert_test() {
     assert(set_under_main_diagonal(hor_rect, 0) == res_under_hor_rect);
     assert(set_under_main_diagonal(ver_rect, 0) == res_under_ver_rect);
     
+    assert(multiply_matrix(sum, 3) == res_mult_num);
+    
     assert(multiply_matrices(mult1, mult2) == res_mult);
     
     assert(add_matrices(sum, sum) == res_sum);
@@ -206,6 +226,10 @@ void assert_test() {
 
 int main(int argc, char *argv[]) {
     assert_test();
+    
+    //TODO: int -> float / double for matrices and functions
+    //TODO: transpose, reversed matrix, power of matrix
+    //TODO: auxillary diagonal methods
     
     matrix<int, 3, 5> mat1;
     matrix<int, 5, 3> mat2;
@@ -224,6 +248,9 @@ int main(int argc, char *argv[]) {
     
     std::cout << "mat1 * mat2\n";
     show_mat(multiply_matrices(mat1, mat2));
+    
+    std::cout << "mat1 * 5\n";
+    show_mat(multiply_matrix(mat1, 5));
     
     return 0;
 }
