@@ -19,6 +19,11 @@ int randint(int from, int to) {
 }
 
 
+double randdouble(double from, double to) {
+    return std::uniform_real_distribution<double>(from, to)(rng);
+}
+
+
 template<std::size_t rows, std::size_t columns>
 matrix<int, rows, columns> add_matrices \
 (matrix<int, rows, columns> mat1, matrix<int, rows, columns> mat2) {
@@ -65,6 +70,19 @@ matrix<int, rows, columns> set_main_diagonal \
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
             new_mat[i][j] = i == j ? num : new_mat[i][j];
+        }
+    }
+    return new_mat;
+}
+
+
+template<std::size_t rows, std::size_t columns>
+matrix<int, rows, columns> set_aux_diagonal \
+(const matrix<int, rows, columns> &mat, const int num) {
+    matrix<int, rows, columns> new_mat = mat;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+            new_mat[i][j] = i == columns-1-j ? num : new_mat[i][j];
         }
     }
     return new_mat;
@@ -252,12 +270,22 @@ void assert_test() {
 int main(int argc, char *argv[]) {
     assert_test();
     
-    //TODO: int -> float / double for matrices and functions
-    //TODO: transpose, reversed matrix, power of matrix
-    //TODO: auxillary diagonal methods
+    //TODO: random double generation
+    //TODO: int -> double for matrices and functions
+    //TODO: transpose, reversed matrix
+    //TODO: auxillary diagonal functions
     //TODO: assert and check power matrix
     //TODO: func multiply dims exceptions
     //TODO: create const matrices such as 1, 0, frob etc.
+    //TODO: matrix det (with block LU + openmp)
+    //TODO: all functions -> openmp
+    //TODO: try and add cuda support
+    //TODO: optimize all functions
+    //TODO: add assert for set_aux_diagonal
+    
+    //TODO: work with sets, fuzzy sets, set operations,
+    // discrete math, graphs, graphics implementation?
+    // draw graphs as tables
     
     matrix<int, 3, 5> mat1;
     matrix<int, 5, 3> mat2;
@@ -271,20 +299,10 @@ int main(int argc, char *argv[]) {
     std::cout << "mat2:\n";
     show_mat(mat2);
     
-    std::cout << "mat1 + mat2\n";
-    show_mat(add_matrices(mat1, mat1));
+    std::cout << "aux diagonal -> 2\n";
+    show_mat(set_aux_diagonal(mat1, 0));
     
-    std::cout << "mat1 * mat2\n";
-    show_mat(multiply_matrices(mat1, mat2));
-    
-    std::cout << "mat1 * 5\n";
-    show_mat(multiply_matrix(mat1, 5));
-    
-    const matrix<int, 3, 3> square3x3 = \
-    {{{1,2,3}, {4,5,6}, {7,8,9}}};
-    
-    std::cout << "square3x3 ^ 3\n";
-    show_mat(matrix_pow(square3x3, 0));
+    std::cout << randdouble(0, 20) << "\n";
     
     return 0;
 }
