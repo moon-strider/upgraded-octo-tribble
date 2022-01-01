@@ -208,7 +208,7 @@ int matrix_det(matrix<double, rows, columns> mat) {
     if (rows != columns) {
         throw std::invalid_argument("Only a square matrices have a det");
     }
-    std::cout << "ebawu";
+    
     double tmp, det;
     
     matrix<double, rows, columns> tmp_mat = mat;
@@ -360,9 +360,8 @@ int main(int argc, char *argv[]) {
     std::cout << "aux diagonal -> 2\n";
     show_mat(set_aux_diagonal(mat1, 0.1));
     
-    matrix<double, 3, 3> mat;
-    fill_mat_(mat, 2.);
-    std::cout << "jija";
+    matrix<double, 3, 3> mat = \
+    {{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}};
     std::cout << "mat det: " << matrix_det(mat) << "\n";
     
     return 0;
