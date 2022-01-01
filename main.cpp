@@ -79,7 +79,7 @@ matrix<double, rows, columns> set_above_main_diagonal \
 
 
 template<std::size_t rows, std::size_t columns>
-matrix<double, rows, columns> set_above_aux_diagonal \
+matrix<double, rows, columns> set_above_sec_diagonal \
 (const matrix<double, rows, columns> &mat, double num) {
     matrix<double, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
@@ -105,7 +105,7 @@ matrix<double, rows, columns> set_under_main_diagonal \
 
 
 template<std::size_t rows, std::size_t columns>// TODO: optimize and revisit
-matrix<double, rows, columns> set_under_aux_diagonal \
+matrix<double, rows, columns> set_under_sec_diagonal \
 (const matrix<double, rows, columns> &mat, const double num) {
     int col = (int)columns;
     matrix<double, rows, columns> new_mat = mat;
@@ -132,7 +132,7 @@ matrix<double, rows, columns> set_main_diagonal \
 
 
 template<std::size_t rows, std::size_t columns>
-matrix<double, rows, columns> set_aux_diagonal \
+matrix<double, rows, columns> set_sec_diagonal \
 (const matrix<double, rows, columns> &mat, const double num) {
     matrix<double, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
@@ -377,9 +377,11 @@ void assert_test() {
     assert(imat == imat_ref);
     assert(square3x3 == multiply_matrices(square3x3, imat));
     
-    assert(set_aux_diagonal(square3x3, 0) == res_aux);
-    assert(set_above_aux_diagonal(square3x3, 0) == res_above_aux);
-    assert(set_under_aux_diagonal(square3x3, 0) == res_under_aux);
+    assert(set_sec_diagonal(square3x3, 0) == res_aux);
+    assert(set_above_sec_diagonal(square3x3, 0) == res_above_aux);
+    assert(set_under_sec_diagonal(square3x3, 0) == res_under_aux);
+    
+    assert(matrix_det(square3x3) == 0);
 }
 
 
@@ -398,7 +400,6 @@ int main(int argc, char *argv[]) {
     //TODO: all functions -> openmp
     //TODO: try and add cuda support
     //TODO: optimize all functions
-    //TODO: add aux asserts
     
     //TODO: work with sets, fuzzy sets, set operations,
     // discrete math, graphs, graphics implementation?
@@ -410,14 +411,14 @@ int main(int argc, char *argv[]) {
     fill_mat_(mat1, 2.);
     fill_mat_(mat2, 4.);
     
-    std::cout << "aux diagonal -> 2\n";
-    show_mat(set_aux_diagonal(mat2, 2));
+    std::cout << "sec diagonal -> 2\n";
+    show_mat(set_sec_diagonal(mat2, 2));
     
-    std::cout << "aux above -> 1\n";
-    show_mat(set_above_aux_diagonal(mat2, 1));
+    std::cout << "sec above -> 1\n";
+    show_mat(set_above_sec_diagonal(mat2, 1));
     
-    std::cout << "aux under -> 0\n";
-    show_mat(set_under_aux_diagonal(mat2, 0));
+    std::cout << "sec under -> 0\n";
+    show_mat(set_under_sec_diagonal(mat2, 0));
     
     return 0;
 }
