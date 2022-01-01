@@ -147,6 +147,21 @@ void fill_mat_(matrix<double, rows, columns> &mat, double n = -1337.) {
 }
 
 
+template<std::size_t rows, std::size_t columns>
+void fill_identity_mat_(matrix<double, rows, columns> &mat) {
+    if (rows != columns) {
+        throw std::invalid_argument \
+        ("Row number must equal col number for identity matrices");
+    }
+    
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < rows; ++j) {
+            mat[i][j] = i == j ? 1 : 0;
+        }
+    }
+}
+
+
 template<std::size_t rows1, std::size_t columns1, \
 std::size_t rows2, std::size_t columns2>
 matrix<double, rows1, columns2> multiply_matrices \
@@ -329,7 +344,7 @@ int main(int argc, char *argv[]) {
     
     //TODO: matrix rank
     //TODO: random double generation
-    //TODO: int -> double for matrices and functions
+    //TODO: assert det
     //TODO: transpose, reversed matrix
     //TODO: auxillary diagonal functions
     //TODO: assert and check power matrix
@@ -340,6 +355,7 @@ int main(int argc, char *argv[]) {
     //TODO: try and add cuda support
     //TODO: optimize all functions
     //TODO: add assert for set_aux_diagonal
+    //TODO: add assert for identity_mat
     
     //TODO: work with sets, fuzzy sets, set operations,
     // discrete math, graphs, graphics implementation?
@@ -359,6 +375,11 @@ int main(int argc, char *argv[]) {
     
     std::cout << "aux diagonal -> 2\n";
     show_mat(set_aux_diagonal(mat1, 0.1));
+    
+    matrix<double, 5, 5> imat;
+    fill_identity_mat_(imat);
+    std::cout << "5x5 identity matrix:\n";
+    show_mat(imat);
     
     matrix<double, 3, 3> mat = \
     {{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}};
