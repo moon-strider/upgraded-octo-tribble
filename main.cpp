@@ -67,7 +67,7 @@ matrix<double, rows, columns> add_matrices \
 
 template<std::size_t rows, std::size_t columns>
 matrix<double, rows, columns> set_above_main_diagonal \
-(const matrix<double, rows, columns> &mat, int num) {
+(const matrix<double, rows, columns> &mat, double num) {
     matrix<double, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
         for (int j = i+1; j < columns; ++j) {
@@ -79,8 +79,21 @@ matrix<double, rows, columns> set_above_main_diagonal \
 
 
 template<std::size_t rows, std::size_t columns>
+matrix<double, rows, columns> set_above_aux_diagonal \
+(const matrix<double, rows, columns> &mat, double num) {
+    matrix<double, rows, columns> new_mat = mat;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = columns-i-2; j >= 0; --j) {
+            new_mat[i][j] = num;
+        }
+    }
+    return new_mat;
+}
+
+
+template<std::size_t rows, std::size_t columns>
 matrix<double, rows, columns> set_under_main_diagonal \
-(const matrix<double, rows, columns> &mat, const int num) {
+(const matrix<double, rows, columns> &mat, const double num) {
     matrix<double, rows, columns> new_mat = mat;
     for (int i = rows-1; i > 0; --i) {
         for (int j = i-1; j >= 0; --j) {
@@ -91,9 +104,23 @@ matrix<double, rows, columns> set_under_main_diagonal \
 }
 
 
+template<std::size_t rows, std::size_t columns>// TODO: optimize and revisit
+matrix<double, rows, columns> set_under_aux_diagonal \
+(const matrix<double, rows, columns> &mat, const double num) {
+    int col = (int)columns;
+    matrix<double, rows, columns> new_mat = mat;
+    for (int i = 1; i < rows; ++i) {
+        for (int j = std::clamp(col-i, 0, col-1); j < columns; ++j) {
+            new_mat[i][j] = num;
+        }
+    }
+    return new_mat;
+}
+
+
 template<std::size_t rows, std::size_t columns>
 matrix<double, rows, columns> set_main_diagonal \
-(const matrix<double, rows, columns> &mat, const int num) {
+(const matrix<double, rows, columns> &mat, const double num) {
     matrix<double, rows, columns> new_mat = mat;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
@@ -227,10 +254,10 @@ int matrix_det(matrix<double, rows, columns> mat) {
     double tmp, det;
     
     matrix<double, rows, columns> tmp_mat = mat;
-    for (int k = 0; k < rows - 1; k++) {
-        for (int i = k + 1; i < rows; i++) {
+    for (int k = 0; k < rows - 1; ++k) {
+        for (int i = k + 1; i < rows; ++i) {
             tmp = -tmp_mat[i][k] / tmp_mat[k][k];
-            for (int j = 0; j < rows; j++) {
+            for (int j = 0; j < rows; ++j) {
                 tmp_mat[i][j] += tmp_mat[k][j] * tmp;
             }
         }
@@ -318,6 +345,10 @@ void assert_test() {
     
     const matrix<double, 3, 3> res_aux = \
     {{{1, 2, 0}, {4, 0, 6}, {0, 8, 9}}};
+    const matrix<double, 3, 3> res_above_aux = \
+    {{{0, 0, 3}, {0, 5, 6}, {7, 8, 9}}};
+    const matrix<double, 3, 3> res_under_aux = \
+    {{{1, 2, 3}, {4, 5, 0}, {7, 0, 0}}};
     
     fill_mat_(filler_mat, 1);
     fill_identity_mat_(imat);
@@ -347,6 +378,8 @@ void assert_test() {
     assert(square3x3 == multiply_matrices(square3x3, imat));
     
     assert(set_aux_diagonal(square3x3, 0) == res_aux);
+    assert(set_above_aux_diagonal(square3x3, 0) == res_above_aux);
+    assert(set_under_aux_diagonal(square3x3, 0) == res_under_aux);
 }
 
 
@@ -365,7 +398,7 @@ int main(int argc, char *argv[]) {
     //TODO: all functions -> openmp
     //TODO: try and add cuda support
     //TODO: optimize all functions
-    //TODO: add aux functions and asserts
+    //TODO: add aux asserts
     
     //TODO: work with sets, fuzzy sets, set operations,
     // discrete math, graphs, graphics implementation?
@@ -377,23 +410,14 @@ int main(int argc, char *argv[]) {
     fill_mat_(mat1, 2.);
     fill_mat_(mat2, 4.);
     
-    std::cout << "mat1:\n";
-    show_mat(mat1);
-    
-    std::cout << "mat2:\n";
-    show_mat(mat2);
-    
     std::cout << "aux diagonal -> 2\n";
-    show_mat(set_aux_diagonal(mat1, 0.1));
+    show_mat(set_aux_diagonal(mat2, 2));
     
-    matrix<double, 5, 5> imat;
-    fill_identity_mat_(imat);
-    std::cout << "5x5 identity matrix:\n";
-    show_mat(imat);
+    std::cout << "aux above -> 1\n";
+    show_mat(set_above_aux_diagonal(mat2, 1));
     
-    matrix<double, 3, 3> mat = \
-    {{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}};
-    std::cout << "mat det: " << matrix_det(mat) << "\n";
+    std::cout << "aux under -> 0\n";
+    show_mat(set_under_aux_diagonal(mat2, 0));
     
     return 0;
 }
