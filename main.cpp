@@ -266,6 +266,11 @@ void assert_test() {
     matrix<double, 3, 3> filler_mat = \
     {{{2, 2, 2}, {2, 2, 2}, {2, 2, 2}}};
     
+    matrix<double, 3, 3> imat;
+    
+    const matrix<double, 3, 3> imat_ref = \
+    {{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}};
+    
     const matrix<double, 3, 3> res_above_square3x3 = \
     {{{1,0,0}, {4,5,0}, {7,8,9}}};
     const matrix<double, 4, 4> res_above_square4x4 = \
@@ -311,6 +316,12 @@ void assert_test() {
     const matrix<double, 5, 3> res_transpose = \
     {{{1, 1, 1}, {2, 2, 2}, {3, 3, 3}, {4, 4, 4}, {5, 5, 5}}};
     
+    const matrix<double, 3, 3> res_aux = \
+    {{{1, 2, 0}, {4, 0, 6}, {0, 8, 9}}};
+    
+    fill_mat_(filler_mat, 1);
+    fill_identity_mat_(imat);
+    
     assert(set_above_main_diagonal(square3x3, 0) == res_above_square3x3);
     assert(set_above_main_diagonal(square4x4, 0) == res_above_square4x4);
     assert(set_above_main_diagonal(hor_rect, 0) == res_above_hor_rect);
@@ -327,15 +338,15 @@ void assert_test() {
     assert(set_under_main_diagonal(ver_rect, 0) == res_under_ver_rect);
     
     assert(multiply_matrix(sum, 3) == res_mult_num);
-    
     assert(multiply_matrices(mult1, mult2) == res_mult);
-    
     assert(add_matrices(sum, sum) == res_sum);
-    
     assert(matrix_pow(square3x3, 3) == res_pow);
     
-    fill_mat_(filler_mat, 1);
     assert(filler_mat == res_fill);
+    assert(imat == imat_ref);
+    assert(square3x3 == multiply_matrices(square3x3, imat));
+    
+    assert(set_aux_diagonal(square3x3, 0) == res_aux);
 }
 
 
@@ -354,8 +365,7 @@ int main(int argc, char *argv[]) {
     //TODO: all functions -> openmp
     //TODO: try and add cuda support
     //TODO: optimize all functions
-    //TODO: add assert for set_aux_diagonal
-    //TODO: add assert for identity_mat
+    //TODO: add aux functions and asserts
     
     //TODO: work with sets, fuzzy sets, set operations,
     // discrete math, graphs, graphics implementation?
