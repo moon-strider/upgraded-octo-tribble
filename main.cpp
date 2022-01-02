@@ -272,6 +272,38 @@ int matrix_det(matrix<double, rows, columns> mat) {
 }
 
 
+template<std::size_t rows, std::size_t columns>
+int matrix_rank(matrix<double, rows, columns> A) {
+    const double EPS = 1E-9;
+    int n = A.size();
+    int m = A[0].size();
+    
+    int rank = 0;
+    std::vector<bool> row_selected(n, false);
+    for (int i = 0; i < m; ++i) {
+        int j;
+        for (j = 0; j < n; ++j) {
+            if (!row_selected[j] && abs(A[j][i]) > EPS)
+                break;
+        }
+        
+        if (j != n) {
+            ++rank;
+            row_selected[j] = true;
+            for (int p = i + 1; p < m; ++p)
+                A[j][p] /= A[j][i];
+            for (int k = 0; k < n; ++k) {
+                if (k != j && abs(A[k][i]) > EPS) {
+                    for (int p = i + 1; p < m; ++p)
+                        A[k][p] -= A[j][p] * A[k][i];
+                }
+            }
+        }
+    }
+    return rank;
+}
+
+
 void assert_test() {
     const matrix<double, 3, 3> square3x3 = \
     {{{1,2,3}, {4,5,6}, {7,8,9}}};
@@ -408,6 +440,9 @@ int main(int argc, char *argv[]) {
     matrix<double, 3, 5> mat1;
     matrix<double, 5, 3> mat2;
     
+    const matrix<double, 3, 3> res_pow = \
+    {{{468, 576, 684}, {1062, 1305, 1548}, {1656, 2034, 2412}}};
+    
     fill_mat_(mat1, 2.);
     fill_mat_(mat2, 4.);
     
@@ -419,6 +454,8 @@ int main(int argc, char *argv[]) {
     
     std::cout << "sec under -> 0\n";
     show_mat(set_under_sec_diagonal(mat2, 0));
+    
+    std::cout << "rank of square3x3:" << matrix_rank(res_pow) << "\n";
     
     return 0;
 }
