@@ -414,6 +414,8 @@ void assert_test() {
     assert(set_under_sec_diagonal(square3x3, 0) == res_under_aux);
     
     assert(matrix_det(square3x3) == 0);
+    assert(matrix_rank(square3x3) == 2);
+    assert(matrix_rank(res_pow) == 2);
 }
 
 
@@ -450,12 +452,12 @@ int main(int argc, char *argv[]) {
     show_mat(set_sec_diagonal(mat2, 2));
     
     std::cout << "sec above -> 1\n";
-    show_mat(set_above_sec_diagonal(mat2, 1));
+    show_mat(set_above_sec_diagonal(mat1, 1));
     
     std::cout << "sec under -> 0\n";
-    show_mat(set_under_sec_diagonal(mat2, 0));
+    show_mat(set_under_sec_diagonal(mat1, 0));
     
-    std::cout << "rank of square3x3:" << matrix_rank(res_pow) << "\n";
+    std::cout << "rank of square3x3: " << matrix_rank(res_pow) << "\n";
     
     return 0;
 }
